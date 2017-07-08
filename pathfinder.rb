@@ -1,9 +1,13 @@
 require_relative "map_parse.rb"
 
 class Stack
-  def initialize(name)
-    @name = name
+  def initialize(name=nil)
+    @name = name || "Stack"
     @array = []
+  end
+
+  def [](node)
+    @array[node]
   end
 
   def <<(node)
@@ -15,6 +19,7 @@ class Stack
   end
 
   def pop
+    sort_cost!
     @array.pop
   end
 
@@ -60,8 +65,9 @@ class Finder
   end
 
   def explore
-    current = @frontier.sort_cost!.pop
+    current = @frontier.pop
     if current.pos == @goal
+      @settled << current
       found current
       return current
     end
@@ -76,22 +82,33 @@ class Finder
         end
       end
     end
-    puts @frontier
-    puts @settled
-    puts "\n"
     return false
   end
 
   def found current
-    puts "FOUND:"
-    puts current
+    # puts @frontier
+    # puts "FOUND: #{current}"
   end
 
   def neighbors(current)
     @map[current.pos]
   end
 
+  def show_map
+    meta = @map[:meta]
+    map_size = meta[:map_size]
+    # rows = meta[:rows]
+    p columns = meta[:columns]
+    map = ""
+    0.upto(map_size).each do |n|
+      map << (@map.key?(n) ? "-" : "%")
+      map << "\n" if ((n+1) % (columns+1) == 0)
+    end
+    map
+  end
 end
-
-finder = Finder.new(start: 9, goal: 11, map_file: "maps/raw2.txt")
-finder = Finder.new(start: 24, goal: 76, map_file: "maps/raw1.txt")
+# finder = Finder.new(start: 9, goal: 11, map_file: "maps/raw2.txt")
+# finder = Finder.new(start: 24, goal: 76, map_file: "maps/raw1.txt")
+# finder = Finder.new(start: 44, goal: 470, map_file: "maps/raw4.txt")
+finder = Finder.new(start: 540, goal: 775, map_file: "maps/raw5.txt")
+puts finder.show_map
