@@ -99,8 +99,7 @@ class Finder
     columns = @meta[:columns]
     dy = (@goal / (columns+1)) - (n / (columns+1))
     dx = (@goal % (columns+1)) - (n % (columns+1))
-    # (Math.sqrt((dx.abs ** 2)+(dy.abs ** 2)).round)*25
-    h = (dx.abs+dy.abs)*18
+    0#h = (dx.abs+dy.abs)*18 # Fudge
   end
 
   def found node
